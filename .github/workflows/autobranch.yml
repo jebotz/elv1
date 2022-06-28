@@ -27,4 +27,7 @@ jobs:
         # the time and day of the week above and specify 20 (days) here.
         # If no argument is given the script creates a release branch
         # unconditionally.
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_REPO: ${{ github.event.repository.name }}
         run: python make-release-branch.py 20

@@ -1,6 +1,7 @@
 """Increment version and make release branch."""
 
 
+import os
 import sys
 from datetime import datetime
 
@@ -19,8 +20,8 @@ if len(sys.argv) > 1:
 else:
     release_days = 0
 
-gh = Github()
-repo = gh.get_repo("jebotz/elv1")
+gh = Github(os.environ['GITHUB_TOKEN'])
+repo = gh.get_repo(os.environ['GITHUB_REPO'])
 
 version_file = open(VERSION_FN, 'r')
 ver = semver.VersionInfo.parse(version_file.read())
