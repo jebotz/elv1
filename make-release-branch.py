@@ -23,20 +23,19 @@ else:
 gh = Github(os.environ['GITHUB_TOKEN'])
 repo = gh.get_repo(os.environ['GITHUB_REPO'])
 
-version_file = open(VERSION_FN, 'r')
-ver = semver.VersionInfo.parse(version_file.read())
-version_file.close()
+with open(VERSION_FN, 'r') as version_file:
+    ver = semver.VersionInfo.parse(version_file.read())
 
-# Check if it's been more than release_days since last release
+# If a argument was given then check if it's been more than
+# that number of days since last release and exit without doing
+# anything if so.
 if release_days > 0:
     old_branch_name = f"release/{ver}"
     try:
         branch = repo.get_branch(branch=old_branch_name)
     except:
         branch = None
-
-    print(f"old_branch_name={old_branch_name}")
-    print(f"branch={branch}")
+    # print(f"branch={branch}")
 
     # Only need to check if there was in fact an old branch, if not
     # we'll just continue and create one.
@@ -60,5 +59,3 @@ repo.create_git_ref(ref=f"refs/heads/{branch_name}", sha=head.commit.sha)
 version_file = open(VERSION_FN, 'w')
 version_file.write(f"{ver}")
 version_file.close()
-
-# Commit the version change

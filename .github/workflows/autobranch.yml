@@ -6,8 +6,9 @@ on:
     # action every week and then check in the action (python script)
     # whether it’s time for a release yet.
     #
-    # Midnight (UTC) every Friday
-    # cron format is: minute hour month-day year day-of-week
+    # cron format is: minute hour day-of-month year day-of-week.  A ’*’
+    # means all possible values, day-of-week starts with 0 for Sunday.
+    # GitHub times are UTC. Thus the following is: Midnight every Friday
     - cron: '0 0 * * 5'
 
 jobs:
@@ -21,13 +22,13 @@ jobs:
       - name: install dependencies
         run: pip install PyGithub semver dateutil
       - name: run our branch maker
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_REPO: ${{ github.event.repository.name }}
         # The python script that does the work takes a single optional
         # argument which is the minimum number of days between releases.
         # Thus if we want to make a release every 3 weeks, we schedule
         # the time and day of the week above and specify 20 (days) here.
         # If no argument is given the script creates a release branch
         # unconditionally.
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          GITHUB_REPO: ${{ github.event.repository.name }}
         run: python make-release-branch.py 20
