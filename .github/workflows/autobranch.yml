@@ -1,0 +1,30 @@
+name: Automatically create release branches
+on:
+  schedule:
+    # This is where we schedule when to create a new release branch, but
+    # the cron syntax doesn’t allow for “every 3 weeks” so we’ll run our
+    # action every week and then check in the action (python script)
+    # whether it’s time for a release yet.
+    #
+    # Midnight (UTC) every Friday
+    # cron format is: minute hour month-day year day-of-week
+    - cron: '0 0 * * 5'
+
+jobs:
+  scheduled_job:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-python@v4
+        with:
+          python-version: '3'
+      - name: install dependencies
+        run: pip install PyGithub semver dateutil
+      - name: run our branch maker
+        # The python script that does the work takes a single optional
+        # argument which is the minimum number of days between releases.
+        # Thus if we want to make a release every 3 weeks, we schedule
+        # the time and day of the week above and specify 20 (days) here.
+        # If no argument is given the script creates a release branch
+        # unconditionally.
+        run: python make-release-branch.py 20
