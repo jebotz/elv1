@@ -8,8 +8,9 @@ on:
     #
     # cron format is: minute hour day-of-month year day-of-week.  A ’*’
     # means all possible values, day-of-week starts with 0 for Sunday.
-    # GitHub times are UTC. Thus the following is: Midnight every Friday
-    - cron: '* * * * *'
+    # GitHub times are UTC. Thus the following is: Midnight UTC at the
+    # start of Friday
+    - cron: '0 0 * * 5'
 
 jobs:
   scheduled_release_branch_maker_job:
@@ -31,4 +32,4 @@ jobs:
         # the time and day of the week above and specify 20 (days) here.
         # If no argument is given the script creates a release branch
         # unconditionally.
-        run: python make-release-branch.py 
+        run: python make-release-branch.py 20
