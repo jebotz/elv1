@@ -5,8 +5,6 @@ import os
 import sys
 from datetime import datetime
 
-from dateutil import parser
-
 from github import Github
 
 import semver
@@ -20,6 +18,8 @@ if len(sys.argv) > 1:
 else:
     release_days = 0
 
+# print(f"token={os.environ['GITHUB_TOKEN']}")
+# print(f"repo={os.environ['GITHUB_REPO']}")
 gh = Github(os.environ['GITHUB_TOKEN'])
 repo = gh.get_repo(os.environ['GITHUB_REPO'])
 
@@ -40,10 +40,11 @@ if release_days > 0:
     # Only need to check if there was in fact an old branch, if not
     # we'll just continue and create one.
     if branch:
-        last_rel_dt = parser.parse(branch.commit.last_modified)
+        commit = repo.get_commit(sha=branch.commit.sha)
+        last_rel_dt = commit.commit.committer.date
         now_dt = datetime.now()
         timediff = last_rel_dt - now_dt
-        if timediff.days() < release_days:
+        if timediff.days < release_days:
             print("Not yet time for a release.")
             sys.exit(0)
 
