@@ -18,10 +18,10 @@ if len(sys.argv) > 1:
 else:
     release_days = 0
 
-# print(f"token={os.environ['GITHUB_TOKEN']}")
-# print(f"repo={os.environ['GITHUB_REPO']}")
+print(f"token={os.environ['GITHUB_TOKEN']}")
+print(f"repo={os.environ['REPO_NAME']}")
 gh = Github(os.environ['GITHUB_TOKEN'])
-repo = gh.get_repo(os.environ['GITHUB_REPO'])
+repo = gh.get_repo(os.environ['REPO_NAME'])
 
 with open(VERSION_FN, 'r') as version_file:
     ver = semver.VersionInfo.parse(version_file.read())
