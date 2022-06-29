@@ -49,14 +49,20 @@ if release_days > 0:
             sys.exit(0)
 
 # Bump the minor version
-ver.bump_minor()
+ver = ver.bump_minor()
 branch_name = f"release/{ver}"
+
+# Write out the new version... this writes directly to the HEAD of
+# the upstream repo at github.  Need to do this before making the
+# branch so the new version is reflected in both places.
+ver_file_contents = repo.get_contents(VERSION_FN, ref='HEAD')
+repo.update_file(ver_file_contents.path, f"{ver}", f"{ver}",
+                 ver_file_contents.sha, branch='main')
 
 # Create the branch
 head = repo.get_commit('HEAD')
 repo.create_git_ref(ref=f"refs/heads/{branch_name}", sha=head.commit.sha)
 
-# Write out the new version
-version_file = open(VERSION_FN, 'w')
-version_file.write(f"{ver}")
-version_file.close()
+# Pull to update the local clone; this shouldn't hurt when run from
+# workflow and is a good thing when run manually
+os.system("git pull")
