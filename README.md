@@ -21,7 +21,9 @@ to run on a specific weekday and let the script decide if it's time for
 a release yet.
 
 The `make-release-branch.py` script can also be run manually for
-testing. To do so set the environment variables `GITHUB_REPO` and
-`GITHUB_TOKEN` to the repo you want to run it on, and a personal access
-token respectively. There must be a file named `VERSION` containing a
-semver compatible version in the repo.
+testing. To do so set the environment variables `REPO_NAME` and
+`GITHUB_TOKEN` to the repo you want to run it on (ghuser/repo), and 
+a personal access token respectively. There must be a file named
+`VERSION` containing a semver compatible version at the top level of
+the repo.
+
